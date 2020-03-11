@@ -53,12 +53,13 @@ class PureGoldApiController extends Controller
      *  Get voucher data
      * 
      *  @param string $accessToken
+     *  @param string $code
      * 
      *  @return object $response
     **/
-    protected static function getVoucherData($accessToken) 
+    protected static function getVoucherData($accessToken,$code) 
     {
-        $response = (new Client)->request('GET', route('puregold-vouchers.show', request()->code), [
+        $response = (new Client)->request('GET', route('puregold-vouchers.show', $code), [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer '.$accessToken,
@@ -81,7 +82,7 @@ class PureGoldApiController extends Controller
             'amount' => 'required|numeric'
         ]);
  
-        $voucherData = self::getVoucherData($loginData['access_token']); 
+        $voucherData = self::getVoucherData($loginData['access_token'],request()->code); 
 
         $responseArr = ['success' => false, 'message' => ''];
 

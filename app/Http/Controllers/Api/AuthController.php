@@ -22,9 +22,7 @@ class AuthController extends Controller
 
         $user = User::create($validatedData);
 
-        $http = new Client;
-
-        $response = $http->post(url('oauth/token'), [
+        $response = (new Client)->post(url('oauth/token'), [
             'form_params' => [
                 'grant_type' => 'password',
                 'client_id' => '2',
@@ -64,9 +62,7 @@ class AuthController extends Controller
 
     public function refreshToken() 
     {
-		$http = new Client;
-
-		$response = $http->post(url('oauth/token'), [
+		$response = (new Client)->post(url('oauth/token'), [
 		    'form_params' => [
 		        'grant_type' => 'refresh_token',
 		        'refresh_token' => request('refresh_token'),

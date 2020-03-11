@@ -12,12 +12,3 @@
 @endphp
 
 @endsection
-
-@section('extra-scripts')
-<script type="text/javascript">
-
-console.log("Hello world");
-
-</script>
-@endsection
-

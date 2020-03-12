@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use GuzzleHttp\Client;
+use DB;
 
+use GuzzleHttp\Client;
 use App\PuregoldVoucher;
+
 use App\PuregoldVoucherTransaction;
 
 use App\Http\Controllers\Controller;
@@ -73,6 +75,8 @@ class PureGoldApiController extends Controller
     {
         $loginData = self::userAuth(request()->email,request()->password);
 
+        DB::raw('LOCK TABLE users WRITE');
+
         if (!$loginData['success']) {
             return $loginData;
         }
@@ -106,9 +110,11 @@ class PureGoldApiController extends Controller
     
         PuregoldVoucher::find($voucherData->id)
             ->update([
-                'is_used' => 1,
+                'is_used' => 0,
                 'balance' => $balance - request()->amount
             ]);
+
+        DB::raw('LOCK TABLE puregold_vouchers WRITE');
 
         PuregoldVoucherTransaction::create([
             'puregold_voucher_id' => $voucherData->id,
@@ -117,6 +123,10 @@ class PureGoldApiController extends Controller
             'balance_after_trans' => $balance - request()->amount
         ]);
 
+        DB::raw('LOCK TABLE puregold_voucher_transactions WRITE');
+
+        DB::RAW('UNLOCK TABLES');
+        
         return self::message('Transaction Successful',true);
     }
 }

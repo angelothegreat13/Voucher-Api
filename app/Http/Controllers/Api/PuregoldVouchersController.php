@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use DB;
+
 use Validator;
 
 use App\PuregoldVoucher;
@@ -39,6 +41,8 @@ class PuregoldVouchersController extends Controller
 
     public function store()
     {
+        DB::raw('lock tables puregold_vouchers write');
+
         $v = Validator::make(request()->all(), [
             'code' => 'required|size:16',
             'name' => 'required',
@@ -82,6 +86,8 @@ class PuregoldVouchersController extends Controller
     **/
     protected static function getVoucherCodeData($code)
     {
+        DB::raw('lock tables puregold_vouchers read');
+
         $vouchers = PuregoldVoucher::all();
         $codeData = NULL;
     

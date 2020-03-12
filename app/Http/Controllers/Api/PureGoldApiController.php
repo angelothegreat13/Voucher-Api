@@ -110,7 +110,7 @@ class PureGoldApiController extends Controller
     
         PuregoldVoucher::find($voucherData->id)
             ->update([
-                'is_used' => 0,
+                'is_used' => 1,
                 'balance' => $balance - request()->amount
             ]);
 
